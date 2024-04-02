@@ -3,19 +3,21 @@ import time
 import pyautogui
 import msvcrt  # Import for Windows compatibility
 import os
+import json
 
+f = open('data.json')
+data = json.load(f)
 stop_event = threading.Event()
 
 def clicker():
   count = 0
-  click_position = 1623, 795
-  click_count = 1000
+  click_position = data['click_pos_x'], data['click_pos_y']
   start()
-  while count < click_count:
+  while count < data['click_count']:
     try:
       # get cursor position
       pyautogui.click(click_position)
-      time.sleep(0.25)
+      time.sleep(data['click_interval'])
       count = count + 1
       print(f"Clicked {count} times at {click_position}")
       if stop_event.is_set():
@@ -33,15 +35,15 @@ def input_listener():
   print("Waiting for input...")
   while True:
     key = get_single_char()
-    if key == '5':
+    if key == data['start']:
       clicker_thread = threading.Thread(target=clicker)
       clicker_thread.daemon = True
       clicker_thread.start()
-    elif key == '6':
+    elif key == data['stop']:
       if clicker_thread is not None and clicker_thread.is_alive():
         stop_event.set()
       print('Program stopped...')
-    elif key == 'N':
+    elif key == data['exit']:
       print('Exiting program...')
       break
       
@@ -71,3 +73,4 @@ def main():
   thread1.join()
 
 main()
+f.close()

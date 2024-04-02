@@ -1,0 +1,9 @@
+{
+  "start": "5",
+  "stop": "6",
+  "exit": "N",
+  "click_count": 1000,
+  "click_interval": 0.25, 
+  "click_pos_x": 1623,
+  "click_pos_y": 795
+}
