@@ -2,6 +2,7 @@ import threading
 import time
 import pyautogui
 import msvcrt  # Import for Windows compatibility
+import os
 
 stop_event = threading.Event()
 
@@ -18,10 +19,12 @@ def clicker():
       count = count + 1
       print(f"Clicked {count} times at {click_position}")
       if stop_event.is_set():
+        os.system('cls')
+        print(f"Clicked {count} times at {click_position}")
         count = 0
         break
-    except pyautogui.exceptions.PyAutoGUIError as e:
-      print(f"Clicking error: {e}")
+    except:
+      print(f"Error occurred")
       break
   stop_event.clear()
 
@@ -43,17 +46,15 @@ def input_listener():
       break
       
 def get_single_char():
-  # if msvcrt.kbhit():  # Check if a key is pressed
-  #   char = msvcrt.getch().decode('utf-8')
-  #   if len(char) == 1:
-  #       return char
-  # return None 
   while True:
-    char = msvcrt.getch().decode('utf-8')  # Read a character without Enter
-    if len(char) == 1:
-        return char
-    else:
-        print("Please enter only one character.")  # Optional: Handle multi-character input
+    try:
+      char = msvcrt.getch().decode('utf-8')  # Read a character without Enter
+      if len(char) == 1:
+          return char
+      else:
+          print("Please enter only one character.")  # Optional: Handle multi-character input
+    except NameError:
+      print("Input Error", NameError.name)
 
 def start():
   count = 2
@@ -63,15 +64,6 @@ def start():
     time.sleep(1)
 
 def main():
-  # Create and start clicker and listener threads
-  # clicker_thread = threading.Thread(target=clicker)
-  # clicker_thread.daemon = True
-  # clicker_thread.start()
-  
-  # input_listener()
-
-  
-
   thread1 = threading.Thread(target=input_listener)
 
   thread1.start()
