@@ -4,13 +4,25 @@ import pyautogui
 import msvcrt  # Import for Windows compatibility
 import os
 import json
+import shutil
 
-f = open('data.json')
-data = json.load(f)
+file_name = './_internal/data/data.json'
 stop_event = threading.Event()
+
+def read_file():
+  try:
+    f = open(file_name)
+    return json.load(f)
+  except:
+    print(f"Failed to open {file_name}")
+  try:
+    f.close()
+  except:
+    print(f'Failed to close {file_name}')
 
 def clicker():
   count = 0
+  data = read_file()
   click_position = data['click_pos_x'], data['click_pos_y']
   start()
   while count < data['click_count']:
@@ -31,6 +43,7 @@ def clicker():
   stop_event.clear()
 
 def input_listener():
+  data = read_file()
   clicker_thread = None
   print("Waiting for input...")
   while True:
@@ -66,6 +79,9 @@ def start():
     time.sleep(1)
 
 def main():
+  # write_file()
+  read_file()
+  
   thread1 = threading.Thread(target=input_listener)
 
   thread1.start()
@@ -73,4 +89,4 @@ def main():
   thread1.join()
 
 main()
-f.close()
+
