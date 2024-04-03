@@ -8,7 +8,7 @@ This is a simple auto clicker made using python to simply spam click the story i
 ``` Python V3.11.4```
 
 - Then, run the command ```pip install -r requirements.txt``` to install the project's packages
-- After you've installed the packages, you can simply run ```pyinstaller main.py``` to generate an <b>executable file</b> for the python script.
+- After you've installed the packages, you can simply run ```pyinstaller main.py --add-data "_internal;."``` to generate an <b>executable file</b> for the python script.
 - A few folders will be generated, you can find the executable in the folder ```dist/main/main.exe```
 - If everything goes smoothly, you have an up and running mouse auto clicker
 

@@ -4,7 +4,6 @@ import pyautogui
 import msvcrt  # Import for Windows compatibility
 import os
 import json
-import shutil
 
 file_name = './_internal/data/data.json'
 stop_event = threading.Event()
@@ -79,7 +78,6 @@ def start():
     time.sleep(1)
 
 def main():
-  # write_file()
   read_file()
   
   thread1 = threading.Thread(target=input_listener)
