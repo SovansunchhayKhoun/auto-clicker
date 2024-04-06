@@ -5,7 +5,7 @@ import msvcrt  # Import for Windows compatibility
 import json
 import os
 
-file_name = "./_internal/data/data.json"
+file_name = "./data/data.json"
 stop_event = threading.Event()
 
 

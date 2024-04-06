@@ -8,13 +8,25 @@ This is a simple auto clicker made using python to simply spam click the story i
 ``` Python V3.11.4```
 
 - Then, run the command ```pip install -r requirements.txt``` to install the project's packages
-- After you've installed the packages, you can simply run ```pyinstaller main.py --add-data "_internal;."``` to generate an <b>executable file</b> for the python script.
-- A few folders will be generated, you can find the executable in the folder ```dist/main/main.exe```
+- After you've installed the packages, you can simply run ```py main.py"``` to run the program
 - If everything goes smoothly, you have an up and running mouse auto clicker
 
 ## Features
 
 - Auto click the mouse at a certain position, in a 0.25s interval for 1000 times
+- To change controls, you can update the json file in ```data/data.json```
+- These are the list of controls
+```json
+{
+  "start": "5", // start key
+  "stop": "6",  // stop key
+  "exit": "N", // exit key
+  "click_count": 1000, // number of clicks
+  "click_interval": 0.25,   // interval between clicks
+  "click_pos_x": 1623, // x click position
+  "click_pos_y": 795 // y click position
+}
+```
 
 ## Drawbacks
 
@@ -29,4 +41,4 @@ This is a simple auto clicker made using python to simply spam click the story i
 
 ## Important
 
-Be sure to run the executable as an administrator if you want it to work in a game
+Be sure to run the program as an administrator if you want it to work in a game
