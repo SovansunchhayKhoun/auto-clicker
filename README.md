@@ -1,6 +1,6 @@
 # Auto Clicker
 
-This is a simple auto clicker made using python to simply spam click the story in genshin... smh
+This is a simple auto clicker made using python to simply spam click in a specified position
 
 ## How to run
 
@@ -28,11 +28,8 @@ This is a simple auto clicker made using python to simply spam click the story i
 }
 ```
 
-## Drawbacks
-
-- Does not listen to keyboard inputs when the executable is out of focus
+## Need of Improvements
 - Lack of customizability (Has to directly modified the code to update controls and such)
-- Stopping is a hassle since you need the executable to be in focus to listen for inputs 
 
 ## Controls
 - To start the auto clicker, press <b>5</b>
