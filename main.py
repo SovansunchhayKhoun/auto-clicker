@@ -1,103 +1,93 @@
 import threading
 import time
 import pyautogui
-import msvcrt  # Import for Windows compatibility
 import json
 import os
+from pynput import keyboard  # Using pynput for key listening
+import msvcrt  # Keeping this for single character input where needed
 
 file_name = "./data/data.json"
 stop_event = threading.Event()
+clicker_thread = None
 
 
+# Function to read data from JSON file
 def read_file():
     try:
-        f = open(file_name)
-        return json.load(f)
-    except:
-        print(f"Failed to open {file_name}")
-    try:
-        f.close()
-    except:
-        print(f"Failed to close {file_name}")
+        with open(file_name) as f:
+            return json.load(f)
+    except Exception as e:
+        print(f"Failed to open {file_name}: {e}")
+        return None
 
 
+# Function to perform the clicking operation
 def clicker():
     data = read_file()
+    if not data:
+        return
     count = 0
     click_position = data["click_pos_x"], data["click_pos_y"]
     start()
     while count < data["click_count"]:
         try:
-            # get cursor position
             pyautogui.click(click_position)
             time.sleep(data["click_interval"])
-            count = count + 1
+            count += 1
             print(f"Clicked {count} times at {click_position}")
             if stop_event.is_set():
-                os.system("cls")
                 print(f"Clicking Stopped. Clicked {count} times at {click_position}")
-                count = 0
                 break
-        except:
-            print(f"Error occurred")
+        except Exception as e:
+            print(f"Error occurred during clicking: {e}")
             break
     stop_event.clear()
 
 
-def input_listener():
+# Function to handle key presses
+def on_press(key):
+    global clicker_thread
     data = read_file()
-    # clicker_thread = None
-    print("Waiting for input...")
-    while True:
-        key = get_single_char()
-        if key == data["start"]:
-            clicker_thread = threading.Thread(target=clicker)
-            clicker_thread.daemon = True
-            clicker_thread.start()
-        elif key == data["stop"]:
-            # if clicker_thread is not None and clicker_thread.is_alive():
+    if not data:
+        return
+
+    try:
+        if key.char == data["start"]:  # Start clicking on specific key press
+            if not clicker_thread or not clicker_thread.is_alive():
+                clicker_thread = threading.Thread(target=clicker)
+                clicker_thread.start()
+        elif key.char == data["stop"]:  # Stop clicking
             stop_event.set()
-            print("Program stopped...")
-        elif key == data["exit"]:
+            print("Clicking stopped.")
+        elif key.char == data["exit"]:  # Exit the program
+            stop_event.set()
+            if clicker_thread:
+                clicker_thread.join()
             print("Exiting program...")
-            clicker_thread.join()
-            break
+            return False  # This stops the key listener
+    except AttributeError:  # Handle special keys like Ctrl, Shift, etc.
+        pass
 
 
-def get_single_char():
-    while True:
-        try:
-            char = msvcrt.getch().decode("utf-8")  # Read a character without Enter
-            if len(char) == 1:
-                return char
-            else:
-                print(
-                    "Please enter only one character."
-                )  # Optional: Handle multi-character input
-        except NameError:
-            print("Input Error", NameError.name)
-
-
+# Countdown before starting
 def start():
     count = 2
     while count > 0:
-        print(f"Starting in {count}")
+        print(f"Starting in {count} seconds...")
         time.sleep(1)
-        count = count - 1
+        count -= 1
 
 
+# Main function to start key listener
 def main():
-    thread1 = threading.Thread(target=input_listener)
+    print("Starting input listener...")
+    # Start the listener in a non-blocking thread
+    with keyboard.Listener(on_press=on_press) as listener:
+        listener.join()  # Keep the listener running
 
-    print("Starting input thread")
-
-    thread1.daemon = True
-
-    thread1.start()
-
-    thread1.join()
-
-    print("Thread Destroyed")
+    print("Program has exited.")
 
 
-main()
+if __name__ == "__main__":
+    main()
+
